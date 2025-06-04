@@ -1,0 +1,320 @@
+#include <iostream>
+#include <string>
+using namespace std;
+
+// la estructura
+struct lastareas {
+    string descripcion;
+    lastareas* siguiente;
+};
+
+// la lista que nos ayudara mas adelante :)
+lastareas* listaprincipio = NULL;
+
+void agregarTareaLista() {
+    cin.ignore();
+    lastareas* nueva = new lastareas();
+    cout << "Ingrese tarea: ";
+    getline(cin, nueva->descripcion);
+    nueva->siguiente = NULL;
+
+    if (listaprincipio == NULL) {
+        listaprincipio = nueva;
+    } else {
+        lastareas* actual = listaprincipio;
+        while (actual->siguiente != NULL) {
+            actual = actual->siguiente;
+        }
+        actual->siguiente = nueva;
+    }
+    cout << "Tarea agregada \n";
+}
+
+void eliminarTareaLista() {
+    cin.ignore();
+    if (listaprincipio == NULL) {
+        cout << "La lista esta vacia mi estimado.\n";
+        return;
+    }
+
+    string descripcion;
+    cout << "Ingrese la tarea a eliminar (exacta porfavor): ";
+    getline(cin, descripcion);
+
+    lastareas* actual = listaprincipio;
+    lastareas* anterior = NULL;
+
+    while (actual != NULL && actual->descripcion != descripcion) {
+        anterior = actual;
+        actual = actual->siguiente;
+    }
+
+    if (actual == NULL) {
+        cout << "Tarea no encontrada f.\n";
+        return;
+    }
+
+    if (anterior == NULL) {
+        listaprincipio = actual->siguiente;
+    } else {
+        anterior->siguiente = actual->siguiente;
+    }
+
+    delete actual;
+    cout << "Tarea eliminada y borrada \n";
+}
+
+void mostrarTareasLista() {
+    if (listaprincipio == NULL) {
+        cout << "La lista esta vacia.\n";
+        return;
+    }
+
+    cout << "Tareas en lista:\n";
+    lastareas* actual = listaprincipio;
+    int i = 1;
+    while (actual != NULL) {
+        cout << i++ << ". " << actual->descripcion << endl;
+        actual = actual->siguiente;
+    }
+}
+
+void buscarTareaLista() {
+    cin.ignore();
+    if (listaprincipio == NULL) {
+        cout << "La lista esta vacia mi estimado.\n";
+        return;
+    }
+
+    string descripcion;
+    cout << "Ingrese la tarea a buscar (exacta porfavor): ";
+    getline(cin, descripcion);
+
+    lastareas* actual = listaprincipio;
+    int posicion = 1;
+    while (actual != NULL) {
+        if (actual->descripcion == descripcion) {
+            cout << "Tarea encontrada en la posicion " << posicion << ": " << actual->descripcion << endl;
+            return;
+        }
+        actual = actual->siguiente;
+        posicion++;
+    }
+
+    cout << "Tarea no encontrada f.\n";
+}
+
+void modificarTareaLista() {
+    cin.ignore();
+    if (listaprincipio == NULL) {
+        cout << "La lista esta vacia mi estimado.\n";
+        return;
+    }
+
+    string descripcion;
+    cout << "Ingrese la tarea a modificar (exacta porfavor): ";
+    getline(cin, descripcion);
+
+    lastareas* actual = listaprincipio;
+    while (actual != NULL) {
+        if (actual->descripcion == descripcion) {
+            cout << "Tarea encontrada: " << actual->descripcion << endl;
+            cout << "Ingrese la nueva descripcion: ";
+            getline(cin, actual->descripcion);
+            cout << "Tarea modificada con exito.\n";
+            return;
+        }
+        actual = actual->siguiente;
+    }
+
+    cout << "Tarea no encontrada f.\n";
+}
+
+// Pila
+lastareas* topePila = NULL;
+
+void pushTarea() {
+    cin.ignore();
+    lastareas* nueva = new lastareas();
+    cout << "Ingrese la tarea: ";
+    getline(cin, nueva->descripcion);
+    nueva->siguiente = topePila;
+    topePila = nueva;
+    cout << "Tarea agregada en pila \n";
+}
+
+void popTarea() {
+    if (topePila == NULL) {
+        cout << "La pila esta vacia f.\n";
+        return;
+    }
+
+    lastareas* temp = topePila;
+    topePila = topePila->siguiente;
+    cout << "Tarea eliminada: " << temp->descripcion << endl;
+    delete temp;
+}
+
+void mostrarPila() {
+    if (topePila == NULL) {
+        cout << "La pila esta vacia f.\n";
+        return;
+    }
+
+    cout << "Tareas en la pila:\n";
+    lastareas* actual = topePila;
+    int i = 1;
+    while (actual != NULL) {
+        cout << i++ << ". " << actual->descripcion << endl;
+        actual = actual->siguiente;
+    }
+}
+
+// Cola
+lastareas* frenteCola = NULL;
+lastareas* finCola = NULL;
+
+void enqueueTarea() {
+    cin.ignore();
+    lastareas* nueva = new lastareas();
+    cout << "Ingrese la tarea: ";
+    getline(cin, nueva->descripcion);
+    nueva->siguiente = NULL;
+
+    if (frenteCola == NULL) {
+        frenteCola = nueva;
+        finCola = nueva;
+    } else {
+        finCola->siguiente = nueva;
+        finCola = nueva;
+    }
+
+    cout << "Tarea agregada a la cola.\n";
+}
+
+void dequeueTarea() {
+    if (frenteCola == NULL) {
+        cout << "La cola esta vacia f.\n";
+        return;
+    }
+
+    lastareas* temp = frenteCola;
+    frenteCola = frenteCola->siguiente;
+    if (frenteCola == NULL) {
+        finCola = NULL;
+    }
+
+    cout << "Tarea eliminada: " << temp->descripcion << endl;
+    delete temp;
+}
+
+void mostrarCola() {
+    if (frenteCola == NULL) {
+        cout << "La cola esta vacia f.\n";
+        return;
+    }
+
+    cout << "Tareas en la cola:\n";
+    lastareas* actual = frenteCola;
+    int i = 1;
+    while (actual != NULL) {
+        cout << i++ << ". " << actual->descripcion << endl;
+        actual = actual->siguiente;
+    }
+}
+
+// menus 2
+void menuLista() {
+    int opcion;
+    do {
+        cout << "\n--- menu 2 lista ---\n";
+        cout << "1. Agregar tarea\n";
+        cout << "2. Eliminar tarea\n";
+        cout << "3. Verificar y mostrar tareas mi estimado\n";
+        cout << "4. Buscar tarea\n";
+        cout << "5. Modificar tarea\n";
+        cout << "6. Volver al menu principal\n";
+        cout << "Seleccione una opcion: ";
+        cin >> opcion;
+
+        switch(opcion) {
+            case 1: agregarTareaLista(); break;
+            case 2: eliminarTareaLista(); break;
+            case 3: mostrarTareasLista(); break;
+            case 4: buscarTareaLista(); break;
+            case 5: modificarTareaLista(); break;
+            case 6: break;
+            default: cout << "Opcion invalida y vuelva a intentar.\n";
+        }
+    } while (opcion != 6);
+}
+
+void menuPila() {
+    int opcion;
+    do {
+        cout << "\n--- menu 2 pila ---\n";
+        cout << "1. Agregar tarea \n";
+        cout << "2. Eliminar tarea )\n";
+        cout << "3. Verificar y mostrar tareas mi estimado\n";
+        cout << "4. Volver al menu principal mi estimado\n";
+        cout << "Seleccione una opcion: ";
+        cin >> opcion;
+
+        switch(opcion) {
+            case 1: pushTarea(); break;
+            case 2: popTarea(); break;
+            case 3: mostrarPila(); break;
+            case 4: break;
+            default: cout << "Opcion invalida y vuelva a intentar.\n";
+        }
+    } while (opcion != 4);
+}
+
+void menuCola() {
+    int opcion;
+    do {
+        cout << "\n--- menu 2 cola ---\n";
+        cout << "1. Agregar tarea \n";
+        cout << "2. Eliminar tarea \n";
+        cout << "3. Verificar y mostrar tareas\n";
+        cout << "4. Volver al menu 1\n";
+        cout << "Seleccione una opcion mi estimado: ";
+        cin >> opcion;
+
+        switch(opcion) {
+            case 1: enqueueTarea(); break;
+            case 2: dequeueTarea(); break;
+            case 3: mostrarCola(); break;
+            case 4: break;
+            default: cout << "Opcion invalida vuelva a intentar.\n";
+        }
+    } while (opcion != 4);
+}
+
+// menu 1
+void menuPrincipal() {
+    int opcion;
+    do {
+        cout << "\n=== Menu 1 ===\n";
+        cout << "1. Lista de Tareas\n";
+        cout << "2. Pila de Tareas\n";
+        cout << "3. Cola de Tareas\n";
+        cout << "4. Salir\n";
+        cout << "Seleccione una opcion mi estimado: ";
+        cin >> opcion;
+
+        switch(opcion) {
+            case 1: menuLista(); break;
+            case 2: menuPila(); break;
+            case 3: menuCola(); break;
+            case 4: cout << "Retirandose del programa\n"; break;
+            default: cout << "Intente de nuevo mi estimado o estimada.\n";
+        }
+    } while (opcion != 4);
+}
+
+// donde empezamos
+int main() {
+    menuPrincipal();
+    return 0;
+}
